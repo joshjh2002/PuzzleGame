@@ -18,7 +18,7 @@ int main(int argc, char** args) {
     TTF_Init();
 
 
-    win = SDL_CreateWindow("Puzzle Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    win = SDL_CreateWindow("Puzzle Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN);
 
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -69,7 +69,16 @@ int main(int argc, char** args) {
 
         //DO BUTTON PRESSES
         if (state[SDL_SCANCODE_W]) {
-            playerRect.x++;
+            playerRect.y -= 5;
+        }
+        if (state[SDL_SCANCODE_A]) {
+            playerRect.x -= 5;
+        }
+        if (state[SDL_SCANCODE_S]) {
+            playerRect.y += 5;
+        }
+        if (state[SDL_SCANCODE_D]) {
+            playerRect.x += 5;
         }
 
         //DO UPDATE
