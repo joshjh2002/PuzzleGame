@@ -1,1 +1,1 @@
-.\PuzzleGame.exe 40 40
+.\PuzzleGame.exe 400 400
