@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "Game.h"
 
 // You must include the command line parameters for your main function to be recognized by SDL
 int main(int argc, char** args) {
@@ -17,8 +18,25 @@ int main(int argc, char** args) {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
+    SDL_DisplayMode dm;
 
-    win = SDL_CreateWindow("Puzzle Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN);
+    int w, h;
+    if (SDL_GetDesktopDisplayMode(0, &dm) != 0)
+    {
+        SDL_Log("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
+        w = 1920;
+        h = 1080;
+    }
+    else
+    {
+        w = dm.w;
+        h = dm.h;
+    }
+
+    std::cout << w << " + " << h << "\n";
+
+
+    win = SDL_CreateWindow("Puzzle Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_BORDERLESS);
 
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -41,7 +59,7 @@ int main(int argc, char** args) {
 
     SDL_Texture *textTexture =  SDL_CreateTextureFromSurface(renderer, textSurface);
     
-    SDL_Rect playerRect = { 0, 0, 128, 128 };
+    
 
     if (!bitmapTex)
     {
@@ -49,6 +67,18 @@ int main(int argc, char** args) {
     }
 
     const Uint8* state = SDL_GetKeyboardState(NULL);
+
+    Game* game;
+    int mx = 10;
+    int my = 20;
+    if (argc == 3)
+    {
+        mx = atoi(args[1]);
+        my = atoi(args[2]);
+    }
+
+    game = new Game(mx, my, w, h, nullptr);
+    SDL_Rect playerRect = { 0, 0,  game->GetBlockSize(), game->GetBlockSize()};
    
 
     while (!loopShouldStop)
@@ -86,8 +116,10 @@ int main(int argc, char** args) {
 
         //DO RENDER
         SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, textTexture, NULL, &textLocation);
+        //SDL_RenderCopy(renderer, textTexture, NULL, &textLocation);
 
+        
+        game->DrawMap(renderer);
         SDL_RenderCopy(renderer, bitmapTex, NULL, &playerRect);
 
         SDL_RenderPresent(renderer);
