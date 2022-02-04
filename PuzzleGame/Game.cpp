@@ -15,6 +15,7 @@ Game::Game(int mapX, int mapY, int screenWidth, int screenHeight, Player* player
 	mapWidth = mapX;
 
 	map = (WorldObject***)malloc(sizeof(WorldObject**) * mapX);
+
 	for (int k = 0; k < mapX; k++) {
 		map[k] = (WorldObject**)malloc(sizeof(WorldObject*) * mapY);
 	}
