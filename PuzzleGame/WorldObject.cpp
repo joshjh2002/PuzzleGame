@@ -15,3 +15,8 @@ int WorldObject::GetX() {
 int WorldObject::GetY() {
 	return this->y;
 }
+
+SDL_Texture* WorldObject::GetTexture()
+{
+	return this->texture;
+}

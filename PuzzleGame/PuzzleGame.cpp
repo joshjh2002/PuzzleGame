@@ -9,8 +9,6 @@
 int main(int argc, char** args) {
     SDL_Window* win = NULL;
     SDL_Renderer* renderer = NULL;
-    SDL_Texture* bitmapTex = NULL;
-    SDL_Surface* bitmapSurface = NULL;
 
     int width = 2560, height = 1440;
     SDL_bool loopShouldStop = SDL_FALSE;
@@ -40,12 +38,13 @@ int main(int argc, char** args) {
 
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    bitmapSurface = IMG_Load("./img/Player.bmp");
-    bitmapTex = SDL_CreateTextureFromSurface(renderer, bitmapSurface);
-    SDL_FreeSurface(bitmapSurface);
+    SDL_Surface* playerSurface = IMG_Load("./img/Player.bmp");
+    SDL_Texture* playerTexture = SDL_CreateTextureFromSurface(renderer, playerSurface);
+    SDL_FreeSurface(playerSurface);
 
-
+    Player* player = new Player(0, 0, playerTexture);
     
+    /*
     TTF_Font* font = TTF_OpenFont("./fonts/arial.ttf", 48);
 
     SDL_Color foregroundColor = { 255, 255, 255 };
@@ -58,13 +57,7 @@ int main(int argc, char** args) {
     SDL_Rect textLocation = { 0, 0, 300, 40 };
 
     SDL_Texture *textTexture =  SDL_CreateTextureFromSurface(renderer, textSurface);
-    
-    
-
-    if (!bitmapTex)
-    {
-        std::cout << "null\n";
-    }
+    */
 
     const Uint8* state = SDL_GetKeyboardState(NULL);
 
@@ -77,8 +70,7 @@ int main(int argc, char** args) {
         my = atoi(args[2]);
     }
 
-    game = new Game(mx, my, w, h, nullptr);
-    SDL_Rect playerRect = { 0, 0,  game->GetBlockSize(), game->GetBlockSize()};
+    game = new Game(mx, my, w, h, player);
    
 
     while (!loopShouldStop)
@@ -99,16 +91,16 @@ int main(int argc, char** args) {
 
         //DO BUTTON PRESSES
         if (state[SDL_SCANCODE_W]) {
-            playerRect.y -= 5;
+            player->y -= game->GetBlockSize();
         }
         if (state[SDL_SCANCODE_A]) {
-            playerRect.x -= 5;
+            player->x -= game->GetBlockSize();
         }
         if (state[SDL_SCANCODE_S]) {
-            playerRect.y += 5;
+            player->y += game->GetBlockSize();
         }
         if (state[SDL_SCANCODE_D]) {
-            playerRect.x += 5;
+            player->x += game->GetBlockSize();
         }
 
         //DO UPDATE
@@ -120,12 +112,12 @@ int main(int argc, char** args) {
 
         
         game->DrawMap(renderer);
-        SDL_RenderCopy(renderer, bitmapTex, NULL, &playerRect);
+        
 
         SDL_RenderPresent(renderer);
     }
 
-    SDL_DestroyTexture(bitmapTex);
+    SDL_DestroyTexture(playerTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(win);
 

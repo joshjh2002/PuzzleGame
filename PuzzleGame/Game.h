@@ -7,7 +7,7 @@
 class Game
 {
 private:
-	WorldObject** map;
+	WorldObject*** map;
 	Player * player;
 	int mapWidth;
 	int mapHeight;

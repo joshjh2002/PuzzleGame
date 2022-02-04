@@ -14,9 +14,9 @@ Game::Game(int mapX, int mapY, int screenWidth, int screenHeight, Player* player
 	mapHeight = mapY;
 	mapWidth = mapX;
 
-	map = (WorldObject**)malloc(sizeof(WorldObject) * mapX);
+	map = (WorldObject***)malloc(sizeof(WorldObject**) * mapX);
 	for (int k = 0; k < mapX; k++) {
-		map[k] = (WorldObject*)malloc(sizeof(WorldObject) * mapY);
+		map[k] = (WorldObject**)malloc(sizeof(WorldObject*) * mapY);
 	}
 
 	this->player = player;
@@ -24,8 +24,7 @@ Game::Game(int mapX, int mapY, int screenWidth, int screenHeight, Player* player
 	{
 		for (int y = 0; y < mapY; y++)
 		{
-			
-			map[x][y] = WorldObject(x * blockSize, y * blockSize, NULL, ObjectType::AIR);
+			map[x][y] = new WorldObject(x * blockSize, y * blockSize, NULL, ObjectType::AIR);
 		}
 	}
 }
@@ -44,8 +43,9 @@ void Game::DrawMap(SDL_Renderer* renderer)
 			else
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			counter++;
-			 rect.x = map[x][y].GetX();
-			 rect.y = map[x][y].GetY();
+			 rect.x = map[x][y]->GetX();
+			 rect.y = map[x][y]->GetY();
+			 
 			 SDL_RenderFillRect(renderer, &rect);
 
 		}
@@ -53,6 +53,10 @@ void Game::DrawMap(SDL_Renderer* renderer)
 			counter++;
 	}
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+	rect.x = player->GetX();
+	rect.y = player->GetY();
+	SDL_RenderCopy(renderer, player->GetTexture(), NULL, &rect);
 }
 
 int Game::GetBlockSize() {

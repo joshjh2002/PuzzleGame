@@ -19,5 +19,6 @@ public:
 	WorldObject(int x, int y, SDL_Texture* texture, ObjectType type);
 	int GetX();
 	int GetY();
+	SDL_Texture* GetTexture();
 };
 
